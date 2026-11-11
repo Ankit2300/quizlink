@@ -8,8 +8,9 @@ from sqlalchemy import (JSON, Column, DateTime, ForeignKey, Integer, String,
 from sqlalchemy.orm import declarative_base, relationship, sessionmaker
 
 DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite:///./quizlink.db")
-if DATABASE_URL.startswith("postgres://"):  # Render/Neon style -> SQLAlchemy style
-    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+for _prefix in ("postgres://", "postgresql://"):  # always use the psycopg (v3) driver
+    if DATABASE_URL.startswith(_prefix):
+        DATABASE_URL = "postgresql+psycopg://" + DATABASE_URL[len(_prefix):]
 
 engine = create_engine(
     DATABASE_URL,
