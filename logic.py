@@ -4,7 +4,9 @@ from collections import Counter
 
 from db import Attempt, Question, Quiz, Teacher
 
-BASE_URL = os.environ.get("BASE_URL", "http://localhost:8000").rstrip("/")
+# Render sets RENDER_EXTERNAL_URL to the service's real public address automatically.
+BASE_URL = (os.environ.get("RENDER_EXTERNAL_URL") or os.environ.get("BASE_URL")
+            or "http://localhost:8000").rstrip("/")
 
 
 class QuizError(ValueError):

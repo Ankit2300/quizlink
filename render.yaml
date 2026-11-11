@@ -12,7 +12,7 @@ services:
       - key: DATABASE_URL
         sync: false        # paste the Neon connection string
       - key: BASE_URL
-        sync: false        # e.g. https://quizlink-xxxx.onrender.com (no trailing slash)
+        sync: false        # optional: Render's RENDER_EXTERNAL_URL is used first
       - key: SECRET_KEY
         generateValue: true
       - key: DEMO_MCP_KEY
