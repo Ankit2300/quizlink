@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}{{ quiz.title }} · QuizLink{% endblock %}
+{% block nav %}{% endblock %}
+{% block body %}
+<div class="timer" id="timer">⏱ {{ quiz.time_limit_min }}:00 left</div>
+<div class="card">
+  <h1>{{ quiz.title }}</h1>
+  <p class="muted">{{ questions|length }} questions · {{ quiz.time_limit_min }} minutes{% if quiz.description %} · {{ quiz.description }}{% endif %}</p>
+</div>
+<form method="post" id="quizform">
+  {% if error %}<div class="error">{{ error }}</div>{% endif %}
+  <div class="card">
+    <label><b>Your name</b></label>
+    <input type="text" name="student_name" required maxlength="120" placeholder="e.g. Aarav Sharma">
+  </div>
+  {% for q in questions %}
+  <div class="card">
+    <h2>Q{{ loop.index }}. {{ q.text }}</h2>
+    {% for opt in q.options %}
+    <label class="opt"><input type="radio" name="q_{{ q.id }}" value="{{ loop.index0 }}"> {{ opt }}</label>
+    {% endfor %}
+  </div>
+  {% endfor %}
+  <button class="btn" type="submit">Submit answers</button>
+</form>
+<script>
+  (function(){
+    var left = {{ quiz.time_limit_min }} * 60, el = document.getElementById('timer'), f = document.getElementById('quizform');
+    var t = setInterval(function(){
+      left--; var m = Math.floor(left/60), s = left%60;
+      el.textContent = '⏱ ' + m + ':' + (s<10?'0':'') + s + ' left';
+      if (left <= 0) { clearInterval(t); el.textContent = "⏱ Time's up, submitting…";
+        var n = f.querySelector('[name=student_name]'); if (!n.value.trim()) n.value = 'Anonymous'; f.submit(); }
+    }, 1000);
+  })();
+</script>
+{% endblock %}

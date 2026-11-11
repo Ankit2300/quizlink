@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Your score · QuizLink{% endblock %}
+{% block nav %}{% endblock %}
+{% block body %}
+<div class="card" style="text-align:center">
+  <p class="muted">{{ quiz.title }}</p>
+  <h1 style="font-size:44px">{{ attempt.score }} / {{ attempt.total }}</h1>
+  <p><b>{{ pct }}%</b> · well done, {{ attempt.student_name }}!</p>
+</div>
+{% for r in rows %}
+<div class="card">
+  <h2>Q{{ loop.index }}. {{ r.q.text }}
+    {% if r.correct %}<span class="ok">✔</span>{% else %}<span class="bad">✘</span>{% endif %}</h2>
+  <p>Your answer:
+    {% if r.chosen is not none %}<b class="{{ 'ok' if r.correct else 'bad' }}">{{ r.q.options[r.chosen] }}</b>{% else %}<span class="bad">Not answered</span>{% endif %}
+  </p>
+  {% if not r.correct %}<p>Correct answer: <b class="ok">{{ r.q.options[r.q.correct_index] }}</b></p>{% endif %}
+  {% if r.q.explanation %}<p class="muted">💡 {{ r.q.explanation }}</p>{% endif %}
+</div>
+{% endfor %}
+{% endblock %}

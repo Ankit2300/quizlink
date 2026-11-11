@@ -1,0 +1,6 @@
+.venv/
+*.db
+server.log
+__pycache__/
+.env
+PLAN.md

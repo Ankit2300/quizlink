@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}QuizLink{% endblock %}</title>
+<style>
+  :root{--bg:#f6f7fb;--card:#fff;--ink:#1d2433;--muted:#667085;--brand:#4f46e5;--ok:#16a34a;--bad:#dc2626;--line:#e4e7ec}
+  *{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  header{background:#fff;border-bottom:1px solid var(--line);padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
+  header a.logo{font-weight:800;color:var(--brand);text-decoration:none;font-size:20px}
+  header nav a{margin-left:14px;color:var(--muted);text-decoration:none}
+  main{max-width:760px;margin:24px auto;padding:0 16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:16px}
+  h1{font-size:24px;margin:0 0 6px} h2{font-size:18px;margin:0 0 10px} .muted{color:var(--muted)}
+  input[type=text],input[type=password],input[type=number],textarea,select{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;font:inherit}
+  .btn{display:inline-block;background:var(--brand);color:#fff;border:0;border-radius:8px;padding:10px 18px;font:inherit;font-weight:600;cursor:pointer;text-decoration:none}
+  .btn.secondary{background:#fff;color:var(--ink);border:1px solid var(--line)} .btn.small{padding:6px 12px;font-size:14px}
+  .opt{display:block;border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin:8px 0;cursor:pointer}
+  .opt:has(input:checked){border-color:var(--brand);background:#eef2ff}
+  .ok{color:var(--ok)} .bad{color:var(--bad)} .error{background:#fef2f2;color:var(--bad);padding:10px;border-radius:8px;margin-bottom:12px}
+  .timer{position:sticky;top:0;background:#111827;color:#fff;padding:8px 12px;border-radius:8px;text-align:center;font-weight:700;margin-bottom:16px;z-index:5}
+  table{width:100%;border-collapse:collapse} th,td{text-align:left;padding:8px;border-bottom:1px solid var(--line);font-size:14px}
+  .pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;background:#eef2ff;color:var(--brand)}
+  code{background:#f2f4f7;padding:2px 6px;border-radius:6px;word-break:break-all}
+</style>
+</head>
+<body>
+<header><a class="logo" href="/">QuizLink</a><nav>{% block nav %}{% if request.session.get("teacher_id") %}<a href="/teacher">My quizzes</a><a href="/teacher/logout">Log out</a>{% else %}<a href="/teacher">Teacher login</a>{% endif %}{% endblock %}</nav></header>
+<main>{% block body %}{% endblock %}</main>
+</body>
+</html>

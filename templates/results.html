@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Results · {{ quiz.title }}{% endblock %}
+{% block body %}
+<p><a href="/teacher">← My quizzes</a> · <a href="{{ links.edit_url }}">Edit quiz</a></p>
+<h1>{{ quiz.title }}: results</h1>
+<div style="display:flex;gap:12px;flex-wrap:wrap">
+  <div class="card" style="flex:1;min-width:140px"><p class="muted" style="margin:0">Students</p><h1>{{ r.attempts }}</h1></div>
+  <div class="card" style="flex:1;min-width:140px"><p class="muted" style="margin:0">Class average</p><h1>{{ r.average_percent if r.average_percent is not none else '–' }}{% if r.average_percent is not none %}%{% endif %}</h1></div>
+</div>
+{% if not r.attempts %}
+<div class="card"><p>No attempts yet. Share the student link: <code>{{ links.student_url }}</code></p></div>
+{% else %}
+<div class="card">
+  <h2>Students</h2>
+  <table><tr><th>Name</th><th>Score</th><th>%</th><th>Submitted (UTC)</th></tr>
+  {% for s in r.students %}<tr><td>{{ s.name }}</td><td>{{ s.score }}/{{ s.total }}</td><td>{{ (100*s.score/s.total)|round|int if s.total else 0 }}%</td><td class="muted">{{ s.submitted_at[:16].replace('T',' ') }}</td></tr>{% endfor %}
+  </table>
+</div>
+<div class="card">
+  <h2>Question by question</h2>
+  <table><tr><th>#</th><th>Question</th><th>Topic</th><th>Got it right</th></tr>
+  {% for q in r.per_question %}<tr><td>{{ q.number }}</td><td>{{ q.question }}</td><td class="muted">{{ q.topic }}</td>
+    <td class="{{ 'bad' if q.percent_correct is not none and q.percent_correct < 50 else 'ok' }}"><b>{{ q.percent_correct }}%</b></td></tr>{% endfor %}
+  </table>
+  <p class="muted">Tip: ask Claude <i>"How did my class do on {{ quiz.title }}? What should I re-teach?"</i></p>
+</div>
+{% endif %}
+{% endblock %}

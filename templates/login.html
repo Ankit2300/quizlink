@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Teacher login · QuizLink{% endblock %}
+{% block body %}
+<div class="card" style="max-width:420px;margin:40px auto">
+  <h1>Teacher login</h1>
+  {% if error %}<div class="error">{{ error }}</div>{% endif %}
+  <form method="post">
+    <p><label>Login</label><input type="text" name="login" value="demo@quizlink.test" required></p>
+    <p><label>Password</label><input type="password" name="password" required></p>
+    <button class="btn" type="submit">Log in</button>
+  </form>
+  <p class="muted">Demo: <code>demo@quizlink.test</code> / <code>demo1234</code></p>
+</div>
+{% endblock %}

@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: quizlink
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.7
+      - key: DATABASE_URL
+        sync: false        # paste the Neon connection string
+      - key: BASE_URL
+        sync: false        # e.g. https://quizlink-xxxx.onrender.com (no trailing slash)
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEMO_MCP_KEY
+        value: demo

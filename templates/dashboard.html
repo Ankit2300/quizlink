@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}My quizzes · QuizLink{% endblock %}
+{% block body %}
+<h1>My quizzes</h1>
+<p class="muted">Hi {{ teacher.name }}. Ask Claude to make a quiz and it appears here.</p>
+{% if not rows %}
+<div class="card"><p>No quizzes yet. In Claude, try: <i>"Make a 10-question quiz on photosynthesis for Class 7 and save it to QuizLink."</i></p></div>
+{% endif %}
+{% for r in rows %}
+<div class="card">
+  <div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap">
+    <div>
+      <h2 style="margin:0">{{ r.quiz.title }}</h2>
+      <p class="muted" style="margin:4px 0">{{ r.n }} questions · {{ r.quiz.time_limit_min }} min ·
+        <span class="pill" {% if r.quiz.status != 'published' %}style="background:#fef2f2;color:#dc2626"{% endif %}>{{ 'Open' if r.quiz.status == 'published' else 'Closed' }}</span>
+        · {{ r.attempts }} attempt{{ '' if r.attempts == 1 else 's' }}{% if r.avg is not none %} · avg {{ r.avg }}%{% endif %}</p>
+    </div>
+    <div style="display:flex;gap:8px;align-items:start">
+      <a class="btn small secondary" href="{{ r.links.edit_url }}">Edit</a>
+      <a class="btn small secondary" href="{{ r.links.results_url }}">Results</a>
+    </div>
+  </div>
+  <p style="margin:10px 0 0">Student link: <code>{{ r.links.student_url }}</code>
+    <button class="btn small secondary" type="button" onclick="navigator.clipboard.writeText('{{ r.links.student_url }}');this.textContent='Copied'">Copy</button></p>
+</div>
+{% endfor %}
+<div class="card">
+  <h2>Your Claude connector</h2>
+  <p class="muted">claude.ai → Settings → Connectors → Add custom connector → paste:</p>
+  <code>{{ mcp_url }}</code>
+</div>
+{% endblock %}

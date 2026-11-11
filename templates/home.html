@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="card">
+  <h1>Your Claude writes the test. QuizLink runs it.</h1>
+  <p class="muted">Photograph a chapter, ask Claude for a quiz, and share one link with your class. Students take it on their phones, and scores appear automatically. QuizLink has no AI inside: your own Claude does the thinking.</p>
+  <a class="btn" href="/teacher">Teacher login</a>
+</div>
+<div class="card">
+  <h2>Connect QuizLink to Claude</h2>
+  <ol>
+    <li>Open <b>claude.ai</b> → <b>Settings</b> → <b>Connectors</b> → <b>Add custom connector</b>.</li>
+    <li>Name: <b>QuizLink</b>. URL: <code>{{ base_url }}/mcp?key=demo</code></li>
+    <li>Click <b>Add</b>, then in a new chat turn on QuizLink from the tools menu.</li>
+    <li>Ask: <i>"Make a 10-question quiz for Class 6 on fractions, 15 minutes, and save it to QuizLink."</i></li>
+  </ol>
+  <p class="muted">Demo teacher login: <code>demo@quizlink.test</code> / <code>demo1234</code></p>
+</div>
+{% endblock %}

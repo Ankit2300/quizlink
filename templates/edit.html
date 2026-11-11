@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Edit · {{ quiz.title }}{% endblock %}
+{% block body %}
+<p><a href="/teacher">← My quizzes</a></p>
+{% if saved %}<div class="card" style="background:#f0fdf4;border-color:#bbf7d0">✅ Saved. Students see the changes immediately.</div>{% endif %}
+{% if error %}<div class="error">{{ error }}</div>{% endif %}
+<form method="post" id="editform">
+<div class="card">
+  <p><label><b>Title</b></label><input type="text" name="title" value="{{ quiz.title }}" required></p>
+  <p><label><b>Instructions for students</b></label><input type="text" name="description" value="{{ quiz.description or '' }}"></p>
+  <div style="display:flex;gap:12px">
+    <p style="flex:1"><label><b>Time limit (minutes)</b></label><input type="number" name="time_limit_min" min="1" max="180" value="{{ quiz.time_limit_min }}"></p>
+    <p style="flex:1"><label><b>Status</b></label>
+      <select name="status"><option value="published" {% if quiz.status=='published' %}selected{% endif %}>Open for students</option>
+      <option value="closed" {% if quiz.status!='published' %}selected{% endif %}>Closed</option></select></p>
+  </div>
+  <p class="muted">Student link: <code>{{ links.student_url }}</code> · <a href="{{ links.student_url }}" target="_blank">Preview</a> · <a href="{{ links.results_url }}">Results</a></p>
+</div>
+<div id="qs">
+{% for q in questions %}{% set i = loop.index0 %}
+<div class="card qcard">
+  <input type="hidden" name="q-{{ i }}-id" value="{{ q.id }}">
+  <div style="display:flex;justify-content:space-between"><h2>Question {{ loop.index }}</h2>
+    <label class="muted"><input type="checkbox" name="q-{{ i }}-delete" value="1"> Delete</label></div>
+  <textarea name="q-{{ i }}-text" rows="2">{{ q.text }}</textarea>
+  <p class="muted" style="margin:10px 0 4px">Options: tick the correct one</p>
+  {% for j in range(6) %}{% set opt = q.options[j] if j < q.options|length else '' %}
+  {% if j < 4 or opt %}
+  <div style="display:flex;gap:8px;align-items:center;margin:6px 0">
+    <input type="radio" name="q-{{ i }}-correct" value="{{ j }}" {% if j == q.correct_index %}checked{% endif %} title="Correct answer">
+    <input type="text" name="q-{{ i }}-opt-{{ j }}" value="{{ opt }}" placeholder="Option {{ j+1 }}">
+  </div>{% endif %}{% endfor %}
+  <div style="display:flex;gap:8px;margin-top:8px">
+    <input type="text" name="q-{{ i }}-topic" value="{{ q.topic or '' }}" placeholder="Topic (optional)">
+    <input type="text" name="q-{{ i }}-explanation" value="{{ q.explanation or '' }}" placeholder="Explanation shown after submit (optional)">
+  </div>
+</div>
+{% endfor %}
+</div>
+<template id="newq">
+<div class="card qcard">
+  <input type="hidden" name="q-IDX-id" value="">
+  <h2>New question</h2>
+  <textarea name="q-IDX-text" rows="2" placeholder="Question text"></textarea>
+  <p class="muted" style="margin:10px 0 4px">Options: tick the correct one</p>
+  <div style="display:flex;gap:8px;align-items:center;margin:6px 0"><input type="radio" name="q-IDX-correct" value="0"><input type="text" name="q-IDX-opt-0" placeholder="Option 1"></div>
+  <div style="display:flex;gap:8px;align-items:center;margin:6px 0"><input type="radio" name="q-IDX-correct" value="1"><input type="text" name="q-IDX-opt-1" placeholder="Option 2"></div>
+  <div style="display:flex;gap:8px;align-items:center;margin:6px 0"><input type="radio" name="q-IDX-correct" value="2"><input type="text" name="q-IDX-opt-2" placeholder="Option 3"></div>
+  <div style="display:flex;gap:8px;align-items:center;margin:6px 0"><input type="radio" name="q-IDX-correct" value="3"><input type="text" name="q-IDX-opt-3" placeholder="Option 4"></div>
+  <div style="display:flex;gap:8px;margin-top:8px"><input type="text" name="q-IDX-topic" placeholder="Topic (optional)"><input type="text" name="q-IDX-explanation" placeholder="Explanation (optional)"></div>
+</div>
+</template>
+<div style="display:flex;gap:8px;position:sticky;bottom:0;background:var(--bg);padding:12px 0">
+  <button class="btn secondary" type="button" onclick="addQ()">+ Add question</button>
+  <button class="btn" type="submit">Save changes</button>
+</div>
+</form>
+<script>
+function addQ(){
+  var n = document.querySelectorAll('#qs .qcard').length;
+  var html = document.getElementById('newq').innerHTML.replace(/IDX/g, n);
+  document.getElementById('qs').insertAdjacentHTML('beforeend', html);
+}
+</script>
+{% endblock %}
